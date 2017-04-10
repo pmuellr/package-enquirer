@@ -1,0 +1,11 @@
+{
+  "name": "package-enquirer",
+  "productName": "Package Enquirer",
+  "version": "1.0.0",
+  "main": "package-enquirer.js",
+  "dependencies": {
+    "async": "~2.3.0",
+    "lru-cache": "~4.0.2",
+    "tiny-json-http": "~5.0.2"
+  }
+}

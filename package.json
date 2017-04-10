@@ -1,0 +1,47 @@
+{
+  "name": "package-enquirer",
+  "productName": "Package Enquirer",
+  "version": "1.0.0",
+  "description": "converts npm ls output to a dependency graph",
+  "license": "MIT",
+  "author": "Patrick Mueller <pmuellr@apache.org> (https://github.com/pmuellr)",
+  "homepage": "https://github.com/pmuellr/package-enquirer",
+  "main": "package-enquirer.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/pmuellr/package-enquirer.git"
+  },
+  "bugs": {
+    "url": "https://github.com/pmuellr/package-enquirer/issues"
+  },
+  "scripts": {
+    "build": "npm run -s standard && npm -s run utest && make build",
+    "electron": "electron app",
+    "standard": "echo 'running standard' && standard -v",
+    "test": "npm -s run utest && npm -s run standard",
+    "utest": "node test/index.js | FORCE_COLOR=1 tap-spec",
+    "watch": "nodemon --exec 'npm run -s build'"
+  },
+  "standard": {
+    "ignore": [
+      "/app/node_modules/",
+      "/app/web/vendor/",
+      "/build/",
+      "/node_modules/",
+      "/tmp/"
+    ]
+  },
+  "dependencies": {
+    "bootstrap": "~3.3.7",
+    "jquery": "~3.2.1",
+    "viz.js": "~1.7.1"
+  },
+  "devDependencies": {
+    "electron": "~1.6.2",
+    "electron-packager": "~8.6.0",
+    "nodemon": "~1.11.0",
+    "standard": "~10.0.1",
+    "tap-spec": "~4.1.1",
+    "tape": "~4.6.0"
+  }
+}
