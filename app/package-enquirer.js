@@ -5,6 +5,10 @@ const path = require('path')
 
 const electron = require('electron')
 
+const menus = require('./lib/menus')
+
+const Logger = require('./lib/logger').getLogger(__filename)
+
 const browserPageURL = url.format({
   protocol: 'file:',
   slashes: true,
@@ -19,6 +23,8 @@ function quit () {
 }
 
 function createWindow () {
+  Logger.log('creating window')
+
   const options = {
     webPreferences: {
       devTools: true,
@@ -34,11 +40,9 @@ function createWindow () {
   let win = new electron.BrowserWindow(options)
   win.loadURL(browserPageURL)
 
+  electron.Menu.setApplicationMenu(menus.getAppMenu())
+
   win.on('closed', () => {
     win = null
-  })
-
-  win.on('show', () => {
-    win.webContents.openDevTools()
   })
 }

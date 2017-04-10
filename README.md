@@ -15,7 +15,10 @@ build
 
 * run `npm install`
 
-* run `make build` or `npm watch`
+* run `make build` or `npm run watch`
+
+After the build succeeds, you can open the locally built app by running
+`npm run open-mac` (and other platforms eventually).
 
 
 license

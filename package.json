@@ -17,6 +17,7 @@
   "scripts": {
     "build": "npm run -s standard && npm -s run utest && make build",
     "electron": "electron app",
+    "open-mac": "open 'build/Package Enquirer-darwin-x64/Package Enquirer.app'",
     "standard": "echo 'running standard' && standard -v",
     "test": "npm -s run utest && npm -s run standard",
     "utest": "node test/index.js | FORCE_COLOR=1 tap-spec",
