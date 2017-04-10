@@ -1,12 +1,21 @@
 package-enquirer - because enquiring Node.js users want to know
 ================================================================================
 
-Have question
+A desktop app answering your questions about your packages.
+
 
 install
 ================================================================================
 
 Download a release from https://github.com/pmuellr/package-enquirer/releases
+
+
+build
+================================================================================
+
+* run `npm install`
+
+* run `make build` or `npm watch`
 
 
 license

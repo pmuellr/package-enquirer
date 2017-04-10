@@ -1,7 +1,7 @@
 {
   "name": "package-enquirer",
   "productName": "Package Enquirer",
-  "version": "1.0.0",
+  "version": "0.0.1",
   "description": "because enquiring Node.js users want to know",
   "license": "MIT",
   "author": "Patrick Mueller <pmuellr@apache.org> (https://github.com/pmuellr)",
