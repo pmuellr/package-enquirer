@@ -27,7 +27,8 @@ BUILD_OPTS_ALL = app \
 BUILD_OPTS_MAC = ${BUILD_OPTS_ALL} \
 	--app-bundle-id     org.muellerware.package-enquirer \
 	--helper-bundle-id  org.muellerware.package-enquirer.helper \
-	--app-category-type public.app-category.developer-tools
+	--app-category-type public.app-category.developer-tools \
+	--extend-info       etc/mac-plist-extensions.plist
 
 BUILD_OPTS_WIN = ${BUILD_OPTS_ALL} \
 	--win32metadata.CompanyName     "Package Enquirer developers" \

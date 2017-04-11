@@ -7,6 +7,8 @@ const electron = require('electron')
 
 const menus = require('./lib/menus')
 
+const SINGLE_INSTANCE = true
+
 const Logger = require('./lib/logger').getLogger(__filename)
 
 const BrowserPageURL = url.format({
@@ -17,38 +19,58 @@ const BrowserPageURL = url.format({
 
 // main
 function main () {
-  Logger.debug(`pid ${process.pid} launched with ${quotedJoined(process.argv.slice(1))}`)
+  console.log(`pid ${process.pid} launched with ${quotedJoined(process.argv.slice(1))}`)
 
-  if (electron.app.makeSingleInstance(openApp)) {
-    Logger.debug(`pid ${process.pid} quitting because process already launched`)
-    Logger.end()
-    electron.app.quit()
-    return
+  if (SINGLE_INSTANCE) {
+    if (electron.app.makeSingleInstance(onAnotherInstance)) {
+      console.log(`pid ${process.pid} quitting because process already launched`)
+      electron.app.quit()
+      return
+    }
   }
 
-  electron.app.on('ready', createWindow)
+  electron.app.once('ready', onReady)
+  electron.app.on('open-file', onOpenFile)
   electron.app.on('window-all-closed', quit)
+}
 
-  openApp(process.argv, process.cwd())
+// main processing, when ready
+function onReady () {
+  electron.Menu.setApplicationMenu(menus.getAppMenu())
+
+  if (process.argv.length <= 1) return
+
+  const fileName = path.resolve(process.cwd(), process.argv[1])
+  createWindow(fileName)
 }
 
 // called when app is run from any kind of launch
-function openApp (argv, cwd) {
-  cwd = path.resolve(cwd)
-  if (argv.length <= 1) {
-    Logger.debug('no file passed in')
+function onAnotherInstance (argv, cwd) {
+  if (argv.length <= 1) return
+
+  const fileName = path.resolve(cwd, argv[1])
+  createWindow(fileName)
+}
+
+// file selected on Mac
+function onOpenFile (event, fileName) {
+  event.preventDefault()
+
+  if (electron.app.isReady()) {
+    createWindow(fileName)
     return
   }
-
-  const file = path.resolve(cwd, argv[1])
-  Logger.log(`pid ${process.pid} openApp with ${file}`)
+  electron.app.once('ready', () => createWindow(fileName))
 }
 
 // create a new window
-function createWindow () {
-  Logger.debug('creating window')
+function createWindow (fileName) {
+  Logger.debug(`creating window for ${fileName}`)
+
+  electron.app.addRecentDocument(fileName)
 
   const options = {
+    title: `${fileName} - PackageEnquirer`,
     webPreferences: {
       devTools: true,
       nodeIntegration: false,
