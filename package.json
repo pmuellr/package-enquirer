@@ -1,8 +1,8 @@
 {
   "name": "package-enquirer",
-  "productName": "Package Enquirer",
+  "productName": "PackageEnquirer",
   "version": "0.0.1",
-  "description": "because enquiring Node.js users want to know",
+  "description": "because enquiring Node.js devs want to know",
   "license": "MIT",
   "author": "Patrick Mueller <pmuellr@apache.org> (https://github.com/pmuellr)",
   "homepage": "https://github.com/pmuellr/package-enquirer",
@@ -15,13 +15,13 @@
     "url": "https://github.com/pmuellr/package-enquirer/issues"
   },
   "scripts": {
+    "build-watch": "npm run -s standard && npm -s run utest && tools/build-local.sh",
     "build": "npm run -s standard && npm -s run utest && make build",
     "electron": "electron app",
-    "open-mac": "open 'build/Package Enquirer-darwin-x64/Package Enquirer.app'",
     "standard": "echo 'running standard' && standard -v",
     "test": "npm -s run utest && npm -s run standard",
     "utest": "node test/index.js | FORCE_COLOR=1 tap-spec",
-    "watch": "nodemon --exec 'npm run -s build'"
+    "watch": "nodemon --exec 'npm run -s build-watch'"
   },
   "standard": {
     "ignore": [

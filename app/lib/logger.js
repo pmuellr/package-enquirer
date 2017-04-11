@@ -2,9 +2,13 @@
 
 exports.getLogger = getLogger
 
+const pkg = require('../package.json')
 const utils = require('./utils')
 
 const Debug = process.env.DEBUG != null || process.env.LOGLEVEL === 'debug'
+
+const IsNode = typeof window === 'undefined'
+const ActualLogger = IsNode ? getFileLogger() : console
 
 // return a new logger
 function getLogger (fileName) {
@@ -15,16 +19,47 @@ function getLogger (fileName) {
 class Logger {
   constructor (fileName) {
     this.fileName = utils.projectPath(fileName)
+    this.endable = typeof ActualLogger.end === 'function'
   }
 
   log (message) {
-    console.log(`${getTime()} - ${this.fileName} - ${message}`)
+    ActualLogger.log(`${getTime()} - ${this.fileName} - ${message}`)
   }
 
   debug (message) {
     if (!Debug) return
     this.log(message)
   }
+
+  end () {
+    if (!this.endable) return
+    ActualLogger.end()
+  }
+}
+
+// if in node, create a console-like object that logs to a file
+function getFileLogger () {
+  const fs = require('fs')
+  const path = require('path')
+  const mkdirp = require('mkdirp')
+  const userhome = require('userhome')
+  const logDir = userhome(`.${pkg.name}`)
+
+  try {
+    mkdirp.sync(logDir)
+  } catch (err) {
+    console.log(`unable to create dir ${logDir}: ${err}`)
+    process.exit(1)
+  }
+
+  const logFile = path.join(logDir, 'log.txt')
+  const oStream = fs.createWriteStream(logFile, {flags: 'a+'})
+
+  class FileLogger {
+    log (message) { oStream.write(`${message}\n`) }
+  }
+
+  return new FileLogger()
 }
 
 // get a printable version of the current time
