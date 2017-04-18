@@ -18,7 +18,7 @@ help:
 
 BUILD_OPTS_ALL = app \
 	--overwrite \
-	--icon              app/web/images/icon \
+	--icon              app/images/icon \
 	--appname           "PackageEnquirer" \
 	--app-copyright     "Copyright 2017 (c) Package Enquirer developers" \
 	--out               build \
@@ -100,33 +100,33 @@ npm-installs:
 copyVendorFiles:
 
 	@echo "==> installing vendor files"
-	@rm -rf app/web/vendor
-	@mkdir -p app/web/vendor/bootstrap/css
-	@mkdir -p app/web/vendor/bootstrap/fonts
-	@mkdir -p app/web/vendor/bootstrap/js
-	@mkdir -p app/web/vendor/jquery
-	@mkdir -p app/web/vendor/viz.js
+	@rm -rf app/vendor
+	@mkdir -p app/vendor/bootstrap/css
+	@mkdir -p app/vendor/bootstrap/fonts
+	@mkdir -p app/vendor/bootstrap/js
+	@mkdir -p app/vendor/jquery
+	@mkdir -p app/vendor/viz.js
 
-	@cp node_modules/bootstrap/dist/css/bootstrap-theme.min.css              app/web/vendor/bootstrap/css
-	@cp node_modules/bootstrap/dist/css/bootstrap-theme.min.css.map          app/web/vendor/bootstrap/css
-	@cp node_modules/bootstrap/dist/css/bootstrap.min.css                    app/web/vendor/bootstrap/css
-	@cp node_modules/bootstrap/dist/css/bootstrap.min.css.map                app/web/vendor/bootstrap/css
-	@cp node_modules/bootstrap/dist/fonts/glyphicons-halflings-regular.woff  app/web/vendor/bootstrap/fonts
-	@cp node_modules/bootstrap/dist/js/bootstrap.min.js                      app/web/vendor/bootstrap/js
+	@cp node_modules/bootstrap/dist/css/bootstrap-theme.min.css              app/vendor/bootstrap/css
+	@cp node_modules/bootstrap/dist/css/bootstrap-theme.min.css.map          app/vendor/bootstrap/css
+	@cp node_modules/bootstrap/dist/css/bootstrap.min.css                    app/vendor/bootstrap/css
+	@cp node_modules/bootstrap/dist/css/bootstrap.min.css.map                app/vendor/bootstrap/css
+	@cp node_modules/bootstrap/dist/fonts/glyphicons-halflings-regular.woff  app/vendor/bootstrap/fonts
+	@cp node_modules/bootstrap/dist/js/bootstrap.min.js                      app/vendor/bootstrap/js
 
-	@cp node_modules/jquery/dist/jquery.min.js   app/web/vendor/jquery
+	@cp node_modules/jquery/dist/jquery.min.js   app/vendor/jquery
 	@# sourcemap doesn't work, even if adding the missing sourcemap line!
 	@# https://blog.jquery.com/2014/01/24/jquery-1-11-and-2-1-released/
-	@#@cp node_modules/jquery/dist/jquery.min.map  app/web/vendor/jquery
+	@#@cp node_modules/jquery/dist/jquery.min.map  app/vendor/jquery
 
-	@cp node_modules/viz.js/viz.js app/web/vendor/viz.js
+	@cp node_modules/viz.js/viz.js app/vendor/viz.js
 
 # ------------------------------------------------------------------------------
 # build an .icns file from a .png
 # ------------------------------------------------------------------------------
 
-I_ICON_FILE = "images/icon.png"
-O_ICON_FILE = "images/icon.icns"
+I_ICON_FILE = "app/images/icon.png"
+O_ICON_FILE = "app/images/icon.icns"
 ICON_TDIR  = "tmp/icns.iconset"
 
 icns:

@@ -4,7 +4,7 @@ exports.createTestRunner = createTestRunner
 
 const tape = require('tape')
 
-const utils = require('../../app/lib/utils')
+const utils = require('../../common/utils')
 
 // Create a test runner given the source file name of the test.
 // Returns a function which takes a test function, which takes a standard `t`

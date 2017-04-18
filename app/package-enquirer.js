@@ -1,47 +1,59 @@
 'use strict'
 
-const url = require('url')
 const path = require('path')
 
-const electron = require('electron')
+const E = require('electron')
 
-const menus = require('./lib/menus')
+const menus = require('./main/menus')
 
 const SINGLE_INSTANCE = true
 
-const Logger = require('./lib/logger').getLogger(__filename)
+const Logger = require('./common/logger').getLogger(__filename)
 
-const BrowserPageURL = url.format({
-  protocol: 'file:',
-  slashes: true,
-  pathname: path.join(__dirname, 'web', 'app.html')
-})
+const PageURLPackageFile = `file://${path.join(__dirname, 'app.html')}`
+const PageURLError = `file://${path.join(__dirname, 'error.html')}`
+
+let OpenedFile
 
 // main
 function main () {
   console.log(`pid ${process.pid} launched with ${quotedJoined(process.argv.slice(1))}`)
 
   if (SINGLE_INSTANCE) {
-    if (electron.app.makeSingleInstance(onAnotherInstance)) {
+    if (E.app.makeSingleInstance(onAnotherInstance)) {
       console.log(`pid ${process.pid} quitting because process already launched`)
-      electron.app.quit()
+      E.app.quit()
       return
     }
   }
 
-  electron.app.once('ready', onReady)
-  electron.app.on('open-file', onOpenFile)
-  electron.app.on('window-all-closed', quit)
+  E.app.once('ready', onReady)
+  E.app.on('open-file', onOpenFile)
+  E.app.on('window-all-closed', quit)
 }
 
 // main processing, when ready
 function onReady () {
-  electron.Menu.setApplicationMenu(menus.getAppMenu())
+  E.Menu.setApplicationMenu(menus.getAppMenu())
 
-  if (process.argv.length <= 1) return
+  let opened = false
 
-  const fileName = path.resolve(process.cwd(), process.argv[1])
-  createWindow(fileName)
+  if (process.argv.length > 1) {
+    const fileName = path.resolve(process.cwd(), process.argv[1])
+    createWindow(PageURLPackageFile, fileName, {fileName: fileName})
+    opened = true
+  }
+
+  if (OpenedFile) {
+    const fileName = OpenedFile
+    OpenedFile = null
+    createWindow(PageURLPackageFile, fileName, {fileName: fileName})
+    opened = true
+  }
+
+  if (opened) return
+
+  createWindow(PageURLError, '', {fileName: null})
 }
 
 // called when app is run from any kind of launch
@@ -49,32 +61,37 @@ function onAnotherInstance (argv, cwd) {
   if (argv.length <= 1) return
 
   const fileName = path.resolve(cwd, argv[1])
-  createWindow(fileName)
+  createWindow(PageURLPackageFile, fileName, {fileName: fileName})
 }
 
 // file selected on Mac
 function onOpenFile (event, fileName) {
   event.preventDefault()
 
-  if (electron.app.isReady()) {
-    createWindow(fileName)
+  if (E.app.isReady()) {
+    createWindow(PageURLPackageFile, fileName, {fileName: fileName})
     return
   }
-  electron.app.once('ready', () => createWindow(fileName))
+
+  OpenedFile = fileName
 }
 
 // create a new window
-function createWindow (fileName) {
-  Logger.debug(`creating window for ${fileName}`)
+function createWindow (url, subtitle, args) {
+  Logger.debug(`creating window for ${url} "${subtitle}" ${JSON.stringify(args)}`)
 
-  electron.app.addRecentDocument(fileName)
+  const fileName = args.fileName
+
+  if (subtitle !== '') subtitle = `${subtitle} - `
+
+  if (fileName != null) E.app.addRecentDocument(fileName)
 
   const options = {
-    title: `${fileName} - PackageEnquirer`,
+    title: `${subtitle}PackageEnquirer`,
     webPreferences: {
       devTools: true,
       nodeIntegration: false,
-      preload: path.join(__dirname, 'web', 'preload.js')
+      preload: path.join(__dirname, 'renderer', 'preload.js')
     }
   }
 
@@ -82,10 +99,10 @@ function createWindow (fileName) {
     options.icon = path.join(__dirname, 'web', 'images', 'icon.png')
   }
 
-  let win = new electron.BrowserWindow(options)
-  win.loadURL(BrowserPageURL)
+  let win = new E.BrowserWindow(options)
+  win.loadURL(url)
 
-  electron.Menu.setApplicationMenu(menus.getAppMenu())
+  E.Menu.setApplicationMenu(menus.getAppMenu())
 
   win.on('closed', () => {
     win = null
@@ -103,7 +120,7 @@ function quotedJoined (array) {
 function quit () {
   Logger.debug(`process ${process.pid} quitting`)
   Logger.end()
-  electron.app.quit()
+  E.app.quit()
   setTimeout(reallyQuit, 2000).unref()
 }
 

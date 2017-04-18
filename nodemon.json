@@ -1,10 +1,8 @@
 {
   "ext": "js,json",
   "ignore": [
-    "app/web/vendor/",
-    "app/node_modules/",
+    "app/vendor/",
     "build/",
-    "node_modules/",
     "tmp/"
   ]
 }

@@ -20,13 +20,13 @@
     "electron": "electron app",
     "standard": "echo 'running standard' && standard -v",
     "test": "npm -s run utest && npm -s run standard",
-    "utest": "node test/index.js | FORCE_COLOR=1 tap-spec",
+    "utest": "node app/test/index.js | FORCE_COLOR=1 tap-spec",
     "watch": "nodemon --exec 'npm run -s build-watch'"
   },
   "standard": {
     "ignore": [
       "/app/node_modules/",
-      "/app/web/vendor/",
+      "/app/vendor/",
       "/build/",
       "/node_modules/",
       "/tmp/"

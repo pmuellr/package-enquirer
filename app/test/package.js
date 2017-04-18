@@ -4,7 +4,7 @@ const utils = require('./lib/utils')
 
 const runTest = utils.createTestRunner(__filename)
 
-const pkg = require('../app/package.json')
+const pkg = require('../package.json')
 
 runTest(testPackageName)
 
